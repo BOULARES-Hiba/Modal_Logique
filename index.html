@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Évaluateur de Logique Modale</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Évaluateur de Logique Modale</h1>
+   <!-- Panneaux supérieurs - Disposition en trois colonnes -->
+    <div class="panel-container">
+      <!-- Section pour la définition du modèle -->
+      <div class="section">
+        <div class="section-title">Définition du Modèle de Kripke</div>
+        
+        <!-- Gestion des mondes -->
+        <div class="form-group">
+          <label for="world-input">Ajouter un monde:</label>
+          <input type="text" id="world-input" placeholder="ex: w1">
+          <button id="add-world-btn">Ajouter</button>
+        </div>
+        
+        <div class="form-group">
+          <label>Mondes:</label>
+          <div class="list-container" id="worlds-list"></div>
+          <button id="delete-world-btn" class="warning">Supprimer</button>
+        </div>
+        
+        <!-- Gestion des relations -->
+        <div class="form-group">
+          <label for="from-world">Relation de:</label>
+          <select id="from-world"></select>
+          <label for="to-world">vers:</label>
+          <select id="to-world"></select>
+          <button id="add-relation-btn">Ajouter Relation</button>
+        </div>
+        
+        <div class="form-group">
+          <label>Relations:</label>
+          <div class="list-container" id="relations-list"></div>
+          <button id="delete-relation-btn" class="warning">Supprimer</button>
+        </div>
+      </div>
+       <!-- Section pour les valuations -->
+      <div class="section">
+        <div class="section-title">Valuations</div>
+        <div class="form-group">
+          <label for="val-world">Monde:</label>
+          <select id="val-world"></select>
+          <label for="proposition">Proposition:</label>
+          <input type="text" id="proposition" maxlength="1" placeholder="ex:p" style="width: 55px;">
+          <label for="value">Valeur:</label>
+          <select id="value">
+            <option value="true">Vrai</option>
+            <option value="false">Faux</option>
+          </select>
+          <button id="set-valuation-btn">Définir Valuation</button>
+        </div>
+        
+        <div class="form-group">
+          <label>Valuations:</label>
+          <div class="list-container" id="valuations-list"></div>
+          <button id="delete-valuation-btn" class="warning">Supprimer</button>
+        </div>
+        
+         <!-- Section pour les contrôles généraux -->
+        <div class="form-group">
+          <div class="section-title">Actions</div>
+          <button id="load-B-btn" class="secondary">Exemple du système B</button>
+          <button id="load-s5-btn" class="secondary">Exemple du système S5</button>
+          <button id="clear-model-btn" class="warning">Effacer le Modèle</button>
+        </div>
+      </div>
+      
+      <!-- Section pour l'évaluation des formules et aide -->
+      <div class="section">
+        <div class="section-title">Évaluation de Formules</div>
+        
+        <div class="form-group">
+          <label for="formula-input">Formule:</label>
+          <input type="text" id="formula-input" placeholder="ex: □p∨◇q" style="width: 280px;">
+        </div>
+        
+        <div class="operator-buttons">
+          <button class="op-btn" data-op="¬">¬</button>
+          <button class="op-btn" data-op="□">□</button>
+          <button class="op-btn" data-op="◇">◇</button>
+          <button class="op-btn" data-op="∧">∧</button>
+          <button class="op-btn" data-op="∨">∨</button>
+          <button class="op-btn" data-op="→">→</button>
+          <button class="op-btn" data-op="↔">↔</button>
+        </div>
+        
+        <div class="form-group">
+          <label for="init-world">Monde initial:</label>
+          <select id="init-world"></select>
+          <button id="evaluate-btn">Évaluer</button>
+        </div>
+        
+        <div class="form-group">
+          <label>Résultat:</label>
+          <div class="result" id="result">Non évalué</div>
+        </div>
+        
+        <!-- Aide sur la logique modale -->
+        <div class="form-group">
+          <div class="section-title">Aide sur la logique modale</div>
+          <div class="help-text">
+            <div class="help-item">Les symboles:</div>
+            <div class="help-item">• p (proposition atomique)</div>
+            <div class="help-item">• ¬p (négation)</div>
+            <div class="help-item">• ◇p (possibilité)</div>
+            <div class="help-item">• □p (nécessité)</div>
+            <div class="help-item">• p∧q (conjonction)</div>
+            <div class="help-item">• p∨q (disjonction)</div>
+            <div class="help-item">• p→q (implication)</div>
+            <div class="help-item">• p↔q (équivalence)</div>
+            <div class="help-item">• Utilisez des parenthèses pour clarifier: (p→q)∧r</div>
+            <div class="help-item">Les Priorités: </div>
+            <div class="help-item"><strong>•Priorité 1 (plus haute):</strong> Parenthèses ( )</div>
+            <div class="help-item"><strong>•Priorité 2:</strong> Négation (¬), Nécessité (□), Possibilité (◇)</div>
+            <div class="help-item"><strong>•Priorité 3:</strong> Conjonction (∧) puis Disjonction (∨)</div>
+            <div class="help-item"><strong>•Priorité 4 (plus basse):</strong> Implication (→), Équivalence (↔)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Section de visualisation -->
+     <div class="section">
+      <div class="section-title">Visualisation du Modèle</div>
+      <div id="visualization" class="visualization"></div>
+    </div> 
+  </div>
+
+</body>
+</html>
+          
